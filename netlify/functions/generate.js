@@ -40,7 +40,7 @@ exports.handler = async (event) => {
             };
         }
 
-        const MODEL_URL = 'https://router.huggingface.co/hf-inference/models/cagliostrolab/animagine-xl-3.1';
+        const MODEL_URL = 'https://router.huggingface.co/models/black-forest-labs/FLUX.1-dev';
 
         const response = await fetch(MODEL_URL, {
             method: 'POST',
