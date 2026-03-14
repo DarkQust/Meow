@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Anime Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Подключаем шрифт Google Fonts для красоты -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✨ AnimeAI</h1>
+            <p>Создай аниме-арт по описанию</p>
+        </header>
+
+        <main>
+            <div class="input-area">
+                <textarea id="prompt" placeholder="Например: 1girl, blue hair, cat ears, sunset, masterpiece" rows="3"></textarea>
+                <button id="generateBtn">🎨 Сгенерировать</button>
+            </div>
+
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Генерация... (до 20 секунд)</p>
+            </div>
+
+            <div class="result-area" id="resultArea" style="display: none;">
+                <img id="generatedImage" alt="Сгенерированное изображение">
+                <div class="action-buttons">
+                    <button id="saveBtn">💾 Сохранить</button>
+                    <button id="shareBtn">📤 Поделиться</button>
+                </div>
+            </div>
+
+            <div class="error" id="error" style="display: none;">
+                <p>❌ Ошибка. Попробуйте другой промпт или повторите позже.</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>Работает на базе Animagine XL 3.1</p>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
