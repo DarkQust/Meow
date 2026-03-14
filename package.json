@@ -1,0 +1,8 @@
+{
+  "name": "anime-generator",
+  "version": "1.0.0",
+  "description": "Anime image generator with Netlify Functions",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}
