@@ -1,3 +1,5 @@
+console.log('Calling model with prompt:', prompt);
+console.log('Model URL:', MODEL_URL);
 const fetch = require('node-fetch');
 
 exports.handler = async (event) => {
