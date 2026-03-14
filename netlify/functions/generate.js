@@ -1,20 +1,22 @@
-// netlify/functions/generate.js
-const fetch = require('node-fetch'); // будет доступно в среде Netlify
+const fetch = require('node-fetch');
 
 exports.handler = async (event) => {
-    // Разрешаем CORS (чтобы клиент мог обращаться)
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
     };
 
-    // Обработка preflight-запроса (OPTIONS)
     if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 200, headers, body: '' };
+    }
+
+    // GET-запрос для проверки работоспособности функции
+    if (event.httpMethod === 'GET') {
         return {
             statusCode: 200,
             headers,
-            body: '',
+            body: JSON.stringify({ status: 'Function is alive' }),
         };
     }
 
@@ -28,8 +30,6 @@ exports.handler = async (event) => {
 
     try {
         const { prompt } = JSON.parse(event.body);
-
-        // Токен берём из переменных окружения (устанавливаем позже)
         const HF_TOKEN = process.env.HF_TOKEN;
 
         if (!HF_TOKEN) {
@@ -69,9 +69,7 @@ exports.handler = async (event) => {
             };
         }
 
-        // Ответ от Hugging Face — это изображение (бинарные данные)
         const imageBuffer = await response.buffer();
-
         return {
             statusCode: 200,
             headers: {
