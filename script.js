@@ -1,4 +1,4 @@
- // script.js
+// script.js — финальная версия
 document.addEventListener('DOMContentLoaded', () => {
     const promptInput = document.getElementById('prompt');
     const generateBtn = document.getElementById('generateBtn');
@@ -8,6 +8,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorDiv = document.getElementById('error');
     const saveBtn = document.getElementById('saveBtn');
     const shareBtn = document.getElementById('shareBtn');
+
+    // Проверка, что все элементы найдены
+    console.log('Elements loaded:', { promptInput, generateBtn, loadingDiv, resultArea, generatedImage, errorDiv });
+
+    // Простой тест: проверяем доступность функции при загрузке страницы
+    async function testFunction() {
+        try {
+            const testResponse = await fetch(`${window.location.origin}/.netlify/functions/generate`);
+            const testData = await testResponse.json();
+            console.log('Function test:', testData);
+        } catch (e) {
+            console.error('Function not reachable:', e);
+            errorDiv.style.display = 'block';
+            errorDiv.innerHTML = '<p>❌ Функция генерации недоступна. Проверь настройки сервера.</p>';
+        }
+    }
+    testFunction();
 
     generateBtn.addEventListener('click', async () => {
         const prompt = promptInput.value.trim();
@@ -21,8 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         errorDiv.style.display = 'none';
 
         try {
-            // Вызываем нашу серверную функцию
-            const response = await fetch('/.netlify/functions/generate', {
+            const response = await fetch(`${window.location.origin}/.netlify/functions/generate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -31,29 +47,24 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Ошибка сервера');
+                const errorText = await response.text();
+                throw new Error(`Ошибка сервера (${response.status}): ${errorText}`);
             }
 
-            // Ответ приходит в виде base64-строки (изображение)
-            const data = await response.json(); // на самом деле мы вернули base64, но в ответе у нас isBase64Encoded, и Netlify сам декодирует?
-            // Уточним: в функции мы вернули isBase64Encoded: true, body: base64. Netlify должен отдать бинарные данные.
-            // Поэтому response это уже blob (изображение).
             const blob = await response.blob();
             const imageUrl = URL.createObjectURL(blob);
-
             generatedImage.src = imageUrl;
             resultArea.style.display = 'flex';
             loadingDiv.style.display = 'none';
 
         } catch (error) {
-            console.error('Ошибка:', error);
+            console.error('Generation error:', error);
             loadingDiv.style.display = 'none';
             errorDiv.style.display = 'block';
+            errorDiv.innerHTML = `<p>❌ ${error.message}</p>`;
         }
     });
 
-    // saveBtn и shareBtn остаются без изменений
     saveBtn.addEventListener('click', () => {
         if (!generatedImage.src) return;
         const link = document.createElement('a');
