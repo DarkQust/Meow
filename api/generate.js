@@ -25,10 +25,10 @@ module.exports = async (req, res) => {
             return;
         }
 
-        // Попробуем URL без /hf-inference/
-        const MODEL_URL = 'https://router.huggingface.co/models/cagliostrolab/animagine-xl-3.1';
-        // Альтернатива: с /hf-inference/ (закомментировано)
-        // const MODEL_URL = 'https://router.huggingface.co/hf-inference/models/cagliostrolab/animagine-xl-3.1';
+        // Используем модель, поддерживающую Inference API
+        const MODEL_URL = 'https://router.huggingface.co/hf-inference/models/andite/anything-v4.0';
+        // Альтернативный URL (если не сработает, попробуйте без /hf-inference/)
+        // const MODEL_URL = 'https://router.huggingface.co/models/andite/anything-v4.0';
 
         console.log('MODEL_URL:', MODEL_URL);
         console.log('Prompt:', prompt);
