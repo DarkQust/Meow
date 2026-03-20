@@ -1,10 +1,8 @@
-console.log('MODEL_URL:', MODEL_URL);
-console.log('Prompt:', prompt);
 // api/generate.js
 const fetch = require('node-fetch');
 
-export default async function handler(req, res) {
-    // Разрешаем CORS для тестирования (можно оставить)
+module.exports = async (req, res) => {
+    // CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -29,12 +27,13 @@ export default async function handler(req, res) {
             return;
         }
 
-        // Используем router.huggingface.co (рекомендуемый endpoint)
-        // const MODEL_URL = 'https://router.huggingface.co/hf-inference/models/cagliostrolab/animagine-xl-3.1';
-        // Альтернативный URL (если не сработает)
+        // Используем старый endpoint (он всё ещё работает)
         const MODEL_URL = 'https://api-inference.huggingface.co/models/cagliostrolab/animagine-xl-3.1';
+        // Если нужен router, раскомментируйте следующую строку и закомментируйте предыдущую
+        // const MODEL_URL = 'https://router.huggingface.co/hf-inference/models/cagliostrolab/animagine-xl-3.1';
 
-        console.log('Calling Hugging Face with prompt:', prompt);
+        console.log('MODEL_URL:', MODEL_URL);
+        console.log('Prompt:', prompt);
 
         const response = await fetch(MODEL_URL, {
             method: 'POST',
@@ -63,10 +62,9 @@ export default async function handler(req, res) {
 
         const imageBuffer = await response.buffer();
         const base64Image = imageBuffer.toString('base64');
-        // Возвращаем изображение в формате base64 (можно отправить как JSON или как бинарные данные)
         res.status(200).json({ image: base64Image });
     } catch (error) {
         console.error('Function error:', error);
         res.status(500).json({ error: 'Internal server error: ' + error.message });
     }
-}
+};
