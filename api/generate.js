@@ -1,3 +1,5 @@
+console.log('MODEL_URL:', MODEL_URL);
+console.log('Prompt:', prompt);
 // api/generate.js
 const fetch = require('node-fetch');
 
