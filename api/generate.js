@@ -25,10 +25,8 @@ module.exports = async (req, res) => {
             return;
         }
 
-        // Используем модель, поддерживающую Inference API
-        const MODEL_URL = 'https://router.huggingface.co/hf-inference/models/andite/anything-v4.0';
-        // Альтернативный URL (если не сработает, попробуйте без /hf-inference/)
-        // const MODEL_URL = 'https://router.huggingface.co/models/andite/anything-v4.0';
+        // РАБОЧАЯ МОДЕЛЬ — Stable Diffusion 1.5
+        const MODEL_URL = 'https://router.huggingface.co/hf-inference/models/runwayml/stable-diffusion-v1-5';
 
         console.log('MODEL_URL:', MODEL_URL);
         console.log('Prompt:', prompt);
