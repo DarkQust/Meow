@@ -1,8 +1,6 @@
-// api/generate.js
 const fetch = require('node-fetch');
 
 module.exports = async (req, res) => {
-    // CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -27,9 +25,9 @@ module.exports = async (req, res) => {
             return;
         }
 
-        // Используем старый endpoint (он всё ещё работает)
-        const MODEL_URL = 'https://api-inference.huggingface.co/models/cagliostrolab/animagine-xl-3.1';
-        // Если нужен router, раскомментируйте следующую строку и закомментируйте предыдущую
+        // Попробуем URL без /hf-inference/
+        const MODEL_URL = 'https://router.huggingface.co/models/cagliostrolab/animagine-xl-3.1';
+        // Альтернатива: с /hf-inference/ (закомментировано)
         // const MODEL_URL = 'https://router.huggingface.co/hf-inference/models/cagliostrolab/animagine-xl-3.1';
 
         console.log('MODEL_URL:', MODEL_URL);
