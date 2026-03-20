@@ -30,9 +30,9 @@ export default async function handler(req, res) {
         }
 
         // Используем router.huggingface.co (рекомендуемый endpoint)
-        const MODEL_URL = 'https://router.huggingface.co/hf-inference/models/cagliostrolab/animagine-xl-3.1';
+        // const MODEL_URL = 'https://router.huggingface.co/hf-inference/models/cagliostrolab/animagine-xl-3.1';
         // Альтернативный URL (если не сработает)
-        // const MODEL_URL = 'https://api-inference.huggingface.co/models/cagliostrolab/animagine-xl-3.1';
+        const MODEL_URL = 'https://api-inference.huggingface.co/models/cagliostrolab/animagine-xl-3.1';
 
         console.log('Calling Hugging Face with prompt:', prompt);
 
