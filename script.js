@@ -1,4 +1,3 @@
-// script.js — финальная версия
 document.addEventListener('DOMContentLoaded', () => {
     const promptInput = document.getElementById('prompt');
     const generateBtn = document.getElementById('generateBtn');
@@ -8,23 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorDiv = document.getElementById('error');
     const saveBtn = document.getElementById('saveBtn');
     const shareBtn = document.getElementById('shareBtn');
-
-    // Проверка, что все элементы найдены
-    console.log('Elements loaded:', { promptInput, generateBtn, loadingDiv, resultArea, generatedImage, errorDiv });
-
-    // Простой тест: проверяем доступность функции при загрузке страницы
-    async function testFunction() {
-        try {
-            const testResponse = await fetch(`${window.location.origin}/.netlify/functions/generate`);
-            const testData = await testResponse.json();
-            console.log('Function test:', testData);
-        } catch (e) {
-            console.error('Function not reachable:', e);
-            errorDiv.style.display = 'block';
-            errorDiv.innerHTML = '<p>❌ Функция генерации недоступна. Проверь настройки сервера.</p>';
-        }
-    }
-    testFunction();
 
     generateBtn.addEventListener('click', async () => {
         const prompt = promptInput.value.trim();
@@ -38,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         errorDiv.style.display = 'none';
 
         try {
-            const response = await fetch(`${window.location.origin}/.netlify/functions/generate`, {
+            const response = await fetch('/api/generate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -47,12 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Ошибка сервера (${response.status}): ${errorText}`);
+                const errorData = await response.json();
+                throw new Error(`Ошибка сервера (${response.status}): ${errorData.error || 'Неизвестная ошибка'}`);
             }
 
-            const blob = await response.blob();
-            const imageUrl = URL.createObjectURL(blob);
+            const data = await response.json();
+            const imageUrl = `data:image/png;base64,${data.image}`;
             generatedImage.src = imageUrl;
             resultArea.style.display = 'flex';
             loadingDiv.style.display = 'none';
