@@ -1,5 +1,3 @@
-console.log('Calling model with prompt:', prompt);
-console.log('Model URL:', MODEL_URL);
 const fetch = require('node-fetch');
 
 exports.handler = async (event) => {
@@ -35,6 +33,7 @@ exports.handler = async (event) => {
         const HF_TOKEN = process.env.HF_TOKEN;
 
         if (!HF_TOKEN) {
+            console.error('HF_TOKEN not set');
             return {
                 statusCode: 500,
                 headers,
@@ -42,7 +41,18 @@ exports.handler = async (event) => {
             };
         }
 
-        const MODEL_URL = 'https://router.huggingface.co/models/black-forest-labs/FLUX.1-dev';
+        // Попробуем несколько вариантов URL (раскомментируйте нужный)
+        // Вариант 1: router с /models/ (рекомендуется)
+        const MODEL_URL = 'https://router.huggingface.co/models/cagliostrolab/animagine-xl-3.1';
+        
+        // Вариант 2: старый api-inference (может ещё работать)
+        // const MODEL_URL = 'https://api-inference.huggingface.co/models/cagliostrolab/animagine-xl-3.1';
+        
+        // Вариант 3: router с /hf-inference/ (как у вас было)
+        // const MODEL_URL = 'https://router.huggingface.co/hf-inference/models/cagliostrolab/animagine-xl-3.1';
+
+        console.log('Sending request to Hugging Face with URL:', MODEL_URL);
+        console.log('Prompt:', prompt);
 
         const response = await fetch(MODEL_URL, {
             method: 'POST',
@@ -62,16 +72,24 @@ exports.handler = async (event) => {
             }),
         });
 
+        console.log('Hugging Face response status:', response.status);
+        
+        // Читаем тело ответа как текст (для диагностики)
+        const responseText = await response.text();
+        console.log('Hugging Face response body (first 500 chars):', responseText.substring(0, 500));
+
         if (!response.ok) {
-            const errorText = await response.text();
             return {
                 statusCode: response.status,
                 headers,
-                body: JSON.stringify({ error: errorText }),
+                body: JSON.stringify({ error: responseText }),
             };
         }
 
-        const imageBuffer = await response.buffer();
+        // Если ответ успешный, предполагаем, что это изображение
+        // Преобразуем текст обратно в буфер (так как мы прочитали как text, нужно конвертировать)
+        const imageBuffer = Buffer.from(responseText, 'binary');
+        
         return {
             statusCode: 200,
             headers: {
@@ -86,7 +104,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ error: 'Internal server error' }),
+            body: JSON.stringify({ error: 'Internal server error: ' + error.message }),
         };
     }
 };
