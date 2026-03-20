@@ -25,8 +25,8 @@ module.exports = async (req, res) => {
             return;
         }
 
-        // РАБОЧАЯ МОДЕЛЬ — Stable Diffusion 1.5
-        const MODEL_URL = 'https://router.huggingface.co/hf-inference/models/runwayml/stable-diffusion-v1-5';
+        // РАБОЧАЯ МОДЕЛЬ — Stable Diffusion 2.1 (точно доступна через Inference API)
+        const MODEL_URL = 'https://router.huggingface.co/hf-inference/models/stabilityai/stable-diffusion-2-1';
 
         console.log('MODEL_URL:', MODEL_URL);
         console.log('Prompt:', prompt);
